@@ -3,9 +3,13 @@ package vitua.kotler.ai.service.impl;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import vitua.kotler.ai.controller.AuthenticationException;
+import vitua.kotler.ai.controller.UserNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vitua.kotler.ai.controller.TokenException;
 import vitua.kotler.ai.dto.JwtAuthenticationResponse;
 import vitua.kotler.ai.dto.RefreshRequestDto;
 import vitua.kotler.ai.dto.SignInRequestDto;
@@ -47,12 +51,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public JwtAuthenticationResponse signUp(SignUpRequestDto request) {
-        var user = userMapper.signUpToEntity(request, passwordEncoder);
-        userService.create(user);
+        try {
+            var user = userMapper.signUpToEntity(request, passwordEncoder);
+            userService.create(user);
 
-        var jwt = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        return new JwtAuthenticationResponse(jwt, refreshToken);
+            var jwt = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
+            return new JwtAuthenticationResponse(jwt, refreshToken);
+        } catch (Exception ex) {
+            throw new AuthenticationException("Ошибка при регистрации пользователя: " + ex.getMessage());
+        }
     }
 
     /**
@@ -63,15 +71,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public JwtAuthenticationResponse signIn(SignInRequestDto request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
-                request.getPassword()
-        ));
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getUsername(),
+                    request.getPassword()
+            ));
 
-        var user = userService.userDetailsService().loadUserByUsername(request.getUsername());
-        var jwt = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        return new JwtAuthenticationResponse(jwt, refreshToken);
+            var user = userService.userDetailsService().loadUserByUsername(request.getUsername());
+            var jwt = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
+            return new JwtAuthenticationResponse(jwt, refreshToken);
+        } catch (BadCredentialsException ex) {
+            throw new AuthenticationException("Неверный логин или пароль");
+        }
     }
 
     /**
@@ -83,16 +95,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public JwtAuthenticationResponse refresh(RefreshRequestDto request) {
         if (!jwtService.validateToken(request.getRefreshToken())) {
-            throw new RuntimeException("Недействительный refresh токен");
+            throw new TokenException("Недействительный refresh токен");
         }
 
         String username = jwtService.extractUserName(request.getRefreshToken());
 
-        var user = userService.userDetailsService().loadUserByUsername(username);
+        try {
+            var user = userService.userDetailsService().loadUserByUsername(username);
+            var accessToken = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
 
-        var accessToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-
-        return new JwtAuthenticationResponse(accessToken, refreshToken);
+            return new JwtAuthenticationResponse(accessToken, refreshToken);
+        } catch (UserNotFoundException ex) {
+            throw new TokenException("Пользователь не найден для данного токена");
+        }
     }
+
 }
