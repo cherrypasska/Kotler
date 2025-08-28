@@ -1,24 +1,23 @@
 package vitua.kotler.ai.dto;
 
-import lombok.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * DTO для ответа аутентификации, содержащий JWT токен доступа.
- * <p>
- * Используется для передачи клиенту JWT после успешной авторизации или регистрации.
- */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "DTO ответа аутентификации, содержащий JWT токены")
 public class JwtAuthenticationResponse {
-    /**
-     * JWT токен доступа, который клиент должен использовать для авторизации последующих запросов.
-     */
+
+    @Schema(description = "Access токен для аутентификации запросов",
+            example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private String token;
 
-    /**
-     * refresh JWT токен доступа, который клиент должен использовать для авторизации последующих запросов.
-     */
+    @Schema(description = "Refresh токен для обновления access токена",
+            example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private String refreshToken;
 }

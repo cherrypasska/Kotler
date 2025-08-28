@@ -16,7 +16,7 @@ public class MessageMapper {
                 .build();
     }
 
-    public static MessageDto toDto(MessageEntity saved) {
+    public MessageDto toDto(MessageEntity saved) {
         return MessageDto.builder()
                 .messageText(saved.getMessageText())
                 .messageType(saved.getMessageType())
