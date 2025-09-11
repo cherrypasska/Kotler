@@ -2,8 +2,8 @@ package vitua.kotler.ai.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import vitua.kotler.ai.dto.MessageDto;
-import vitua.kotler.ai.entity.MessageEntity;
+import vitua.kotler.ai.dtos.MessageDto;
+import vitua.kotler.ai.entitys.MessageEntity;
 
 @Component
 @RequiredArgsConstructor

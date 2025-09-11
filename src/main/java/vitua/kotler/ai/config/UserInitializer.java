@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import vitua.kotler.ai.entity.UserEntity;
+import vitua.kotler.ai.entitys.UserEntity;
 import vitua.kotler.ai.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

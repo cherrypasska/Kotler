@@ -2,7 +2,7 @@ package vitua.kotler.ai.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import vitua.kotler.ai.entity.UserEntity;
+import vitua.kotler.ai.entitys.UserEntity;
 
 import java.util.Optional;
 
@@ -46,4 +46,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
     UserEntity getById(Long aLong);
+
+    UserEntity getByUsername(String username);
 }
