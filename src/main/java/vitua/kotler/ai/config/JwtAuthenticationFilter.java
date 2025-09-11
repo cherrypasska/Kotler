@@ -15,8 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import vitua.kotler.ai.service.JwtService;
-import vitua.kotler.ai.service.UserService;
+import vitua.kotler.ai.services.JwtService;
+import vitua.kotler.ai.services.UserService;
 
 import java.io.IOException;
 

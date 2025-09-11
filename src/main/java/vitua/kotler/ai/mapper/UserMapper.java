@@ -3,8 +3,8 @@ package vitua.kotler.ai.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import vitua.kotler.ai.dto.SignUpRequestDto;
-import vitua.kotler.ai.entity.UserEntity;
+import vitua.kotler.ai.dtos.SignUpRequestDto;
+import vitua.kotler.ai.entitys.UserEntity;
 
 /**
  * Маппер для преобразования DTO, связанных с пользователем, в сущность {@link UserEntity}.

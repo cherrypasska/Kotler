@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import vitua.kotler.ai.service.UserService;
+import vitua.kotler.ai.services.UserService;
 
 import java.util.List;
 
@@ -53,7 +53,11 @@ public class SecurityConfiguration {
                 }))
                 .authorizeHttpRequests(request -> request
                         //requestMatchers("/api/chats/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**","/","/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
